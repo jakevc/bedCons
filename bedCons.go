@@ -25,6 +25,7 @@ func main() {
 	mc := flag.Float64("minscore", 0.5, "the output column percentgt calcualtes the percentage of bigWig bins greater than or equal to this score")
 	ofn := flag.String("outfile", "", "output filename")
 	bs := flag.Int("binsize", 50, "bin size to summarize bigwig values over")
+	header := flag.Bool("header", true, "print the file header")
 	flag.Parse()
 
 	if *bw == "" || *bed == "" || *ofn == "" {
@@ -57,7 +58,7 @@ func main() {
 		fmt.Println(errors.Wrap(err, "bigwig read failed"))
 	}
 	gr := addBinStats(g, reader, stat, binsize, binOlap, cons)
-	writeOutput(gr, *ofn)
+	writeOutput(gr, *ofn, *header)
 }
 
 // Import GRanges from a Bed file with 6 columns.
@@ -168,7 +169,7 @@ func addBinStats(g gonetics.GRanges, reader *gonetics.BigWigReader, binstat gone
 	return g
 }
 
-func writeOutput(g gonetics.GRanges, outfile string) {
+func writeOutput(g gonetics.GRanges, outfile string, header bool) {
 	var b bytes.Buffer
 
 	name := g.GetMetaStr("name")
@@ -177,6 +178,10 @@ func writeOutput(g gonetics.GRanges, outfile string) {
 	mea := g.GetMetaFloat("mean")
 	med := g.GetMetaFloat("median")
 	per := g.GetMetaFloat("percentgt")
+
+	if header {
+		fmt.Fprintf(&b, "chrom\tstart\tend\tname\tscore\tstrand\tmean\tmedian\tpercentgt\n")
+	}
 
 	for i := 0; i < g.Length(); i++ {
 		if _, err := fmt.Fprintf(&b, "%s", g.Seqnames[i]); err != nil {
