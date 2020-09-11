@@ -39,7 +39,7 @@ chr1	2175000	2185000	hg38_n_B00109	0.132596293231	.
 Summarize phyloP score over these regions:
 
 ```
-bedCons -bigwig hg38.phyloP100way.bw -bedfile hg38_n_boundaries.bed -minscore 0.6 -outfile test.bed
+./bedCons -bigwig hg38.phyloP100way.bw -bedfile hg38_n_boundaries.bed -minscore 0.6 -outfile test.bed
 ```
 
 ```
