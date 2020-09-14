@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
-	"math"
 	"os"
 	"strconv"
 	"strings"
@@ -143,7 +142,7 @@ func addBinStats(g gonetics.GRanges, reader *gonetics.BigWigReader, binstat gone
 		from := g.Ranges[i].From
 		to := g.Ranges[i].To
 		name := g.Seqnames[i]
-		if r, _, err := reader.QuerySlice(name, from, to, binstat, binsize, binolap, math.NaN()); err != nil {
+		if r, _, err := reader.QuerySlice(name, from, to, binstat, binsize, binolap, 0); err != nil {
 			fmt.Println(err)
 		} else {
 			med, err := stats.Median(r)
